@@ -13,20 +13,20 @@ private:
 public:
     RAII_int_t()
     {
-        cout << "RAII_int_t(0) constructed" << endl;
+        cout << "RAII_int_t(0) default constructed" << endl;
         m_int_p = new int{};
     }
 
     explicit RAII_int_t(const int &value)
     {
-        cout << "RAII_int_t(" << value << ") constructed" << endl;
+        cout << "RAII_int_t(" << value << ") value constructed" << endl;
         m_int_p = new int{value};
     }
 
     explicit RAII_int_t(const int *value_p)
     {
         if (value_p != nullptr) {
-            cout << "RAII_int_t(" << *value_p << ") constructed" << endl;
+            cout << "RAII_int_t(" << *value_p << ") value_p constructed" << endl;
             m_int_p = new int{*value_p};
         }
         else {
@@ -37,15 +37,22 @@ public:
 
     RAII_int_t(const RAII_int_t &other)
     {
-        cout << "RAII_int_t(" << other.get() << ") created" << endl;
+        cout << "RAII_int_t(" << other.get() << ") copy constructed" << endl;
         m_int_p = new int{other.get()};
+    }
+
+    RAII_int_t &operator=(RAII_int_t other)
+    {
+        std::swap(m_int_p, other.m_int_p);
+        return *this;
     }
 
     RAII_int_t &operator=(const int &value)
     {
         cout << "RAII_int_t(" << *m_int_p << ") turn to " << value << endl;
+        int *int_p = new int{value};
         delete m_int_p;
-        m_int_p = new int{value};
+        m_int_p = int_p;
         return *this;
     }
 
