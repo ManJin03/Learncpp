@@ -30,6 +30,6 @@ int main()
     cout << count << " <40" << endl;
     std::sort(begin, end, std::greater{});
     std::for_each(std::next(begin), end, [](int t) { cout << t << ' '; });
-
+    
     return 0;
 }
