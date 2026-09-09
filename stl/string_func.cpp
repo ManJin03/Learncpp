@@ -53,7 +53,7 @@ string initialize()
     return s2;
 }
 
-void access(string &s)
+void access(std::string &s)
 {
     cout << "access" << endl;
     //均返回string大小
@@ -150,10 +150,33 @@ void modified(string &s)
     cout << "modified done" << endl;
 }
 
+void view(string &s)
+{
+    cout << "string_view" << endl;
+    //string_view创建一个string的视图，拥有和string相同的只读函数，
+    //但是无法修改，生命周期绑定至string，可以看作是类似指针的用法。
+    std::string_view sv{s};
+
+    using namespace std::string_literals; // access the s suffix
+    using namespace std::string_view_literals; // access the sv suffix
+
+    std::cout << "foo\n"; // no suffix is a C-style string literal
+    std::cout << "goo\n"s; // s suffix is a std::string literal
+    std::cout << "moo\n"sv; // sv suffix is a std::string_view literal
+
+    std::string_view s1{"my string"}; //安全，s1指向常量字符串
+    std::string_view s2{"my string"s}; //危险，s2指向一个被转换成string的临时对象，s2在该语句结束后悬空
+    //收缩视图，不可逆操作
+    sv.remove_prefix(1);
+    sv.remove_suffix(1);
+    cout << sv << endl;
+}
+
 int main()
 {
     //移动构造
     string s{initialize()};
     access(s);
     modified(s);
+    view(s);
 }
