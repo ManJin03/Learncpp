@@ -149,7 +149,7 @@ void test8()
     close(STDOUT_FILENO);
     close(STDIN_FILENO);
     int pipefd[2];
-    pipe(pipefd);
+    pipe(pipefd); //也可以用dup2(pipefd[0],STDIN_FILENO)显式重定向
     int rc = fork();
     if (rc == 0) {
         close(pipefd[0]); //关闭读端
@@ -159,6 +159,7 @@ void test8()
         exit(0);
     }
     wait(NULL);
+    close(pipefd[1]); //父进程关闭写端，第二个子进程读完数据后才能收到EOF
     rc = fork();
     if (rc == 0) {
         close(pipefd[1]); //关闭写端
@@ -169,7 +170,6 @@ void test8()
     }
     wait(NULL);
     close(pipefd[0]);
-    close(pipefd[1]);
 }
 
 int main() { test8(); }
