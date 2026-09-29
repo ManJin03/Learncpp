@@ -23,9 +23,13 @@ A practice product to learn enhanced cpp.
 | [constexpr_lab](other/constexpr_lab.cpp)             | 常量表达式实验                                      |
 | [process_lab](other/process_lab.cpp)                 | 底层接口进程api实验                                 |
 | [c++man]()                                           | c++实现的猜词游戏                                   |
-|                                                      |                                                     |
+| [15_puzzle]()                                        | 15拼图                                              |
+| [myUDP](netWork/myUDP.h)                             | 对C++UDP简单封装                                    |
+| [myTCP](netWork/myTCP.h)                             | 对C++TCP简单封装                                    |
 
 ## 说明
 
 文件内附有详细或简略的注释，多有疏漏之处，可前往[learncpp](https://learncpp.cn/)学习 ，
 更加详细的资料请前往[cppreference](https://cppreference.cn/)
+
+网络部分参考【计算机网络：自顶向下】
