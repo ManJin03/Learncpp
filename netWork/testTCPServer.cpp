@@ -8,11 +8,16 @@ static std::string hostname = "127.0.0.1";
 static int port = 12001;
 static int bufsize = 1024;
 
-int main()
+int main(int argc , char* argv[])
 {
+    if (argc > 1) {
+        port = atoi(argv[1]);
+    }
     myTCP::TCPServer server(port);
+    std::cout << "server started(port: " << port << ")\n";
     while (true) {
         myTCP::TCPbase con = server.acceptm();
+        std::cout << "connected\n";
         while (true) {
             auto msg = con.recvm(bufsize);
             if (msg.empty()) break;
