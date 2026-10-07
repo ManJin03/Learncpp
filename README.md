@@ -23,7 +23,7 @@ A practice product to learn enhanced cpp.
 | [constexpr_lab](other/constexpr_lab.cpp)             | 常量表达式实验                                      |
 | [process_lab](other/process_lab.cpp)                 | 底层接口进程api实验                                 |
 | [c++man](practice/c++man.cpp)                        | c++实现的猜词游戏                                   |
-| [15_puzzle]()                                        | 15拼图                                              |
+| [15_puzzle](practice/15_puzzle.cpp)                  | 15拼图                                              |
 | [myUDP](netWork/myUDP.h)                             | 对C++UDP简单封装                                    |
 | [myTCP](netWork/myTCP.h)                             | 对C++TCP简单封装                                    |
 
