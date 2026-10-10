@@ -26,6 +26,10 @@ A practice product to learn enhanced cpp.
 | [15_puzzle](practice/15_puzzle.cpp)                  | 15拼图                                              |
 | [myUDP](netWork/myUDP.h)                             | 对C++UDP简单封装                                    |
 | [myTCP](netWork/myTCP.h)                             | 对C++TCP简单封装                                    |
+| [Thread](other/Thread.cpp)                           | 基本线程                                            |
+| [special_template]()                                 | 模板偏特化                                          |
+| [inherited_template]()                               | 奇异递归模板模式                                    |
+| [lambda]()                                           | lambda底层逻辑                                      |
 
 ## 说明
 
