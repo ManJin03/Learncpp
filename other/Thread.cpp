@@ -572,5 +572,5 @@ namespace t8
 
 int main()
 {
-    t1::run();
+    t3::run();
 }

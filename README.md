@@ -6,6 +6,8 @@ A practice product to learn enhanced cpp.
 
 该项目旨在记录本人在学习c++时写的体现c++各种性质的测试代码，如有不妥或遗漏之处，欢迎指正。
 
+代码解释文章在本人技术博客[byteforge](https://tech-manjin.pages.dev/)中收录。
+
 ## 文件目录
 
 | 文件名                                               | 内容                                                | 

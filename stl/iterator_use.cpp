@@ -1,6 +1,7 @@
 //
 // Created by 33550 on 2026/9/5.
 //
+#include <algorithm>
 #include <iostream>
 #include<vector>
 using std::cout;
