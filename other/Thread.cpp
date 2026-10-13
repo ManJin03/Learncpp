@@ -47,13 +47,15 @@ namespace t1
     {
         std::thread t1(hello , 1);
         t1.detach();
-        std::thread t2([]
+        int i{};
+        std::thread t2([&i]
         {
-            cout << "hello thread2" << std::endl;
+            cout << "hello thread2" << i++ << std::endl;
         });
         t2.join();
+        cout << i << '\n';
         Hello tem{10};
-        std::thread t3(&Hello::hello , &tem , 1);
+        std::thread t3(&Hello::hello , tem , 1);
         t3.join();
         int value = 10;
         std::thread t4([] (int& i) { i += 15; } , std::ref(value));
@@ -490,10 +492,85 @@ namespace t7
 
 namespace t8
 {
-    void run() {}
+    bool done{};
+    std::mutex mutex;
+    std::condition_variable cv;
+
+    void sleeptask()
+    {
+        sleep(1);
+    }
+
+    void setcv()
+    {
+        sleep(1);
+        std::lock_guard<std::mutex> lock(mutex);
+        done = true;
+        cv.notify_all();
+    }
+
+    bool waitloop()
+    {
+        std::unique_lock<std::mutex> lock(mutex);
+        while (!done) {
+            if (cv.wait_for(lock , std::chrono::seconds(1)) == std::cv_status::timeout) {
+                break;
+            }
+        }
+        return done;
+    }
+
+    bool waitloop2()
+    {
+        std::unique_lock<std::mutex> lock(mutex);
+        while (!done) {
+            if (cv.wait_until(lock , std::chrono::steady_clock::now() + std::chrono::seconds(1)) ==
+                std::cv_status::timeout) {
+                break;
+            }
+        }
+        return done;
+    }
+
+    void run()
+    {
+        std::packaged_task<void()> task(sleeptask);
+        auto f1 = task.get_future();
+        std::thread t(std::move(task));
+        t.detach();
+        if (f1.wait_for(std::chrono::milliseconds(100)) == std::future_status::ready) {
+            cout << "won!\n";
+        }
+        else {
+            cout << "not won!\n";
+        }
+        std::packaged_task<bool()> task2(waitloop);
+        auto f2 = task2.get_future();
+        std::thread t2(std::move(task2));
+        t2.detach();
+        setcv();
+        if (f2.get()) {
+            cout << "won!\n";
+        }
+        else {
+            cout << "not won!\n";
+        }
+        done = false;
+        std::packaged_task<bool()> task3(waitloop2);
+        auto f3 = task3.get_future();
+        std::thread t3(std::move(task3));
+        t3.detach();
+        setcv();
+        if (f3.get()) {
+            cout << "won!\n";
+        }
+        else {
+            cout << "not won!\n";
+        }
+    }
 }
 
 int main()
 {
-    t7::run();
+    t1::run();
 }
