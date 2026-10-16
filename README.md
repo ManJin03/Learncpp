@@ -32,6 +32,7 @@ A practice product to learn enhanced cpp.
 | [special_template]()                                 | 模板偏特化                                          |
 | [inherited_template]()                               | 奇异递归模板模式                                    |
 | [lambda]()                                           | lambda底层逻辑                                      |
+| [Atomic](other/Atomic.cpp)                           | 原子类型                                            |
 
 ## 说明
 

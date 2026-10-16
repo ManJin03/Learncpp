@@ -406,7 +406,9 @@ namespace t6
         std::thread t1(sleepforwhile);
         t1.detach();
         sleep(1);
+        lock.lock();
         start = true;
+        lock.unlock();
         std::thread idata(pushdata);
         std::thread odata(coutdata);
         idata.detach();
@@ -434,7 +436,11 @@ namespace t7
         }
     };
 
-    int geti() { return num; }
+    int geti()
+    {
+        cout << "geti ";
+        return num;
+    }
 
     int add(int a , int b)
     {
@@ -446,23 +452,23 @@ namespace t7
     {
         auto p = std::make_shared<std::promise<int>>();
         auto f = p->get_future();
-        std::thread t([p]
+        std::thread t([] (std::promise<int> promise)
         {
-            p->set_value(5);
-        });
+            promise.set_value(5);
+        } , std::move(*p));
         t.detach();
         return f;
     }
 
     void waitfutures()
     {
-        auto p = std::make_shared<std::promise<int>>();
-        std::shared_future<int> f = p->get_future();
-        std::thread t([p]
+        std::promise<int> p;
+        std::shared_future<int> f = p.get_future();
+        std::thread t([] (std::promise<int> promise)
         {
             sleep(1);
-            p->set_value(6);
-        });
+            promise.set_value(6);
+        } , std::move(p));
         t.detach();
         for (int i = 0 ; i < 10 ; ++i) {
             std::thread tem([f,i]
@@ -476,10 +482,12 @@ namespace t7
 
     void run()
     {
-        auto f1 = std::async(geti);
+        std::future<int> f1 = std::async(geti);
         auto f2 = std::async(&Num::geti , Num());
+        sleep(1);
         cout << "f1: " << f1.get() << "\nf2: " << f2.get() << '\n';
         auto f3 = std::async(std::launch::deferred , add , 1 , 2);
+        sleep(1);
         cout << "f3: " << f3.get() << '\n';
         std::packaged_task<int(int , int)> addtask(add);
         auto f4 = addtask.get_future();
@@ -572,5 +580,5 @@ namespace t8
 
 int main()
 {
-    t3::run();
+    t7::run();
 }
