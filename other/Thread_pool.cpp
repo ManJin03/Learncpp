@@ -15,22 +15,24 @@ namespace ThreadPool
         using ThreadVectorType = std::vector<std::thread>;
         using TaskQueueType = std::queue<std::move_only_function<void()>>;
         using TaskQueueCondType = std::condition_variable;
-        const int QUEUE_SIZE{16};
+        const size_t QUEUE_SIZE{16};
         const size_t thread_num{4};
 
     public:
         template <typename Callable , typename... Args>
         auto submit(Callable&& callable , Args&&... args)
-            -> std::future<std::invoke_result_t<std::decay_t<Callable>,std::decay_t<Args>...>>
+            -> std::future<std::invoke_result_t<Callable,Args...>>
         {
-            using result_type = std::invoke_result_t<std::decay_t<Callable>,std::decay_t<Args>...>;
-            std::packaged_task<result_type()> task([=]()-> result_type
-            {
-                return callable(args...);
-            });
+            using result_type = std::invoke_result_t<Callable,Args...>;
+            std::packaged_task<result_type()>
+                    task([callable=std::forward<Callable>(callable)
+                            ,...args=std::forward<Args>(args)]()mutable-> result_type
+                        {
+                            return std::invoke(std::move(callable) , std::move(args)...);
+                        });
             auto f = task.get_future();
             std::unique_lock<std::mutex> lock{m_queue_mutex};
-            while (m_queue.size() > QUEUE_SIZE) {
+            while (m_queue.size() >= QUEUE_SIZE) {
                 m_queue_full.wait(lock);
             }
             m_queue.push(std::move(task));
@@ -115,6 +117,13 @@ int sleep1s(const int i)
     return i;
 }
 
+int usleep(std::unique_ptr<int> p)
+{
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    printf("%d:usleep\n" , *p);
+    return *p;
+}
+
 int main()
 {
     ThreadPool::Thread_pool pool;
@@ -126,6 +135,8 @@ int main()
         std::cout << i.get();
     }
     std::cout << '\n';
+    auto u = std::make_unique<int>(50);
+    pool.submit(usleep , std::move(u));
     // int end;
     // std::cin >> end;
 }
