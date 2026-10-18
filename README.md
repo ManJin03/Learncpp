@@ -33,6 +33,7 @@ A practice product to learn enhanced cpp.
 | [inherited_template]()                               | 奇异递归模板模式                                    |
 | [lambda]()                                           | lambda底层逻辑                                      |
 | [Atomic](other/Atomic.cpp)                           | 原子类型                                            |
+| [wrapper](template/wrapper.cpp)                      | 使用模板实现类型擦除                                |
 
 ## 说明
 
